@@ -19,7 +19,7 @@ class MainActivity : AppCompatActivity() {
 
         Timber.d("MainActivity onCreate")
 
-        val getRawData = GetRawData()
+        val getRawData = GetRawData(this)
         getRawData.execute("https://api.flickr.com/services/feeds/photos_public.gne?tags=android,oreo&format=json&nojsoncallback=1")
 
 //        fab.setOnClickListener { view ->
@@ -37,6 +37,14 @@ class MainActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         Timber.d("MainActivity onOptionItemSelected")
         return super.onOptionsItemSelected(item)
+    }
+
+    fun onDownloadComplete(data: String, status: DownloadStatus) {
+        if (status == DownloadStatus.OK) {
+            Timber.d("MainActivity onDownloadComplete OK\ndata = $data")
+        } else {
+            Timber.d("MainActivity onDownloadComplete\nStatus = $status\nError = $data")
+        }
     }
 
 //    companion object {
