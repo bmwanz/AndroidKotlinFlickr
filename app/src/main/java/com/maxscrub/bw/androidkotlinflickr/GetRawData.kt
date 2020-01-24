@@ -16,7 +16,8 @@ class GetRawData(private val listener: OnDownloadComplete) : AsyncTask<String, V
 
     override fun onPostExecute(result: String) {
         super.onPostExecute(result)
-        Timber.d("GetRawData.onPostExecute \n${result}")
+//        Timber.d("GetRawData.onPostExecute \n${result}")
+        Timber.d("GetRawData.onPostExecute")
         listener.onDownloadComplete(result, downloadStatus)
     }
 
