@@ -1,5 +1,7 @@
 package com.maxscrub.bw.androidkotlinflickr
 
+import android.net.Uri
+import android.nfc.NdefRecord.createUri
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
@@ -20,9 +22,27 @@ class MainActivity : AppCompatActivity(), OnDownloadComplete, OnDataAvailable {
 
         Timber.d("MainActivity.onCreate")
 
+        val url = createUri("https://api.flickr.com/services/feeds/photos_public.gne", "android,oreo", "en-us", true)
         val getRawData = GetRawData(this)
-        getRawData.execute("https://api.flickr.com/services/feeds/photos_public.gne?tags=android,oreo&format=json&nojsoncallback=1")
+        getRawData.execute(url)
 
+    }
+
+    private fun createUri(baseUrl: String, searchCriteria: String, language: String, matchAll: Boolean) : String {
+
+        val uri =  Uri
+            .parse(baseUrl)
+            .buildUpon()
+            .appendQueryParameter("tags", searchCriteria)
+            .appendQueryParameter("tagmode", if (matchAll) "ALL" else "ANY")
+            .appendQueryParameter("lang", language)
+            .appendQueryParameter("format", "json")
+            .appendQueryParameter("nojsoncallback", "1")
+            .build().toString()
+
+        Timber.d("MainActivity.createUri %s", uri)
+
+        return uri
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
