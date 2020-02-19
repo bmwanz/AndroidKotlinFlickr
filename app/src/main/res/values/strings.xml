@@ -2,4 +2,6 @@
     <string name="app_name">AndroidKotlinFlickr</string>
     <string name="title_activity_main">MainActivity</string>
     <string name="emptyString" />
+    <string name="title_activity_search">SearchActivity</string>
+    <string name="title_activity_photo_details">Photo Details</string>
 </resources>
