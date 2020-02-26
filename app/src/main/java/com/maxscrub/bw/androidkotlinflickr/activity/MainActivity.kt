@@ -5,7 +5,9 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.maxscrub.bw.androidkotlinflickr.*
+import com.maxscrub.bw.androidkotlinflickr.adapter.FlickrRecyclerViewAdapter
 import com.maxscrub.bw.androidkotlinflickr.interfaces.OnDataAvailable
 import com.maxscrub.bw.androidkotlinflickr.interfaces.OnDownloadComplete
 import com.maxscrub.bw.androidkotlinflickr.model.GetFlickrJsonData
@@ -14,12 +16,15 @@ import com.maxscrub.bw.androidkotlinflickr.task.DownloadStatus
 import com.maxscrub.bw.androidkotlinflickr.task.GetRawData
 
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.content_main.*
 import timber.log.Timber
 import java.lang.Exception
 
 class MainActivity : AppCompatActivity(),
     OnDownloadComplete,
     OnDataAvailable {
+
+    private val flickrRecyclerViewAdapter = FlickrRecyclerViewAdapter(ArrayList())
 
     override fun onCreate(savedInstanceState: Bundle?) {
         Timber.plant(Timber.DebugTree())
@@ -29,9 +34,11 @@ class MainActivity : AppCompatActivity(),
 
         Timber.d("MainActivity.onCreate")
 
+        recycler_view.layoutManager = LinearLayoutManager(this)
+        recycler_view.adapter = flickrRecyclerViewAdapter
+
         val url = createUri("https://api.flickr.com/services/feeds/photos_public.gne", "android,oreo", "en-us", true)
-        val getRawData =
-            GetRawData(this)
+        val getRawData = GetRawData(this)
         getRawData.execute(url)
 
     }
@@ -77,7 +84,8 @@ class MainActivity : AppCompatActivity(),
     }
 
     override fun onDataAvailable(data: List<Photo>) {
-        Timber.d("MainActivity.onDataAvailable: Data - $data")
+        Timber.d("MainActivity.onDataAvailable")
+        flickrRecyclerViewAdapter.loadNewData(data)
     }
 
     override fun onError(exception: Exception) {
