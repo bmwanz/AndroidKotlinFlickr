@@ -8,6 +8,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.maxscrub.bw.androidkotlinflickr.R
 import com.maxscrub.bw.androidkotlinflickr.model.Photo
+import com.squareup.picasso.Picasso
 import timber.log.Timber
 
 
@@ -29,7 +30,15 @@ class FlickrRecyclerViewAdapter(private var photoList: List<Photo>) :
     }
 
     override fun onBindViewHolder(holder: FlickrImageViewHolder, position: Int) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        // called by layout manager when need new data in existing view
+        val photoItem = photoList[position]
+        Timber.d("%s.onBindViewHolder: ${photoItem.title} --> ${position}", TAG)
+        Picasso.with(holder.thumbnail.context).load(photoItem.image)
+            .error(R.drawable.placeholder)
+            .placeholder(R.drawable.placeholder)
+            .into(holder.thumbnail)
+
+        holder.title.text = photoItem.title
     }
 
     fun loadNewData(newPhotos: List<Photo>) {
