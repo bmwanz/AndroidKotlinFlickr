@@ -1,6 +1,7 @@
-package com.maxscrub.bw.androidkotlinflickr
+package com.maxscrub.bw.androidkotlinflickr.task
 
 import android.os.AsyncTask
+import com.maxscrub.bw.androidkotlinflickr.interfaces.OnDownloadComplete
 import timber.log.Timber
 import java.io.IOException
 import java.net.MalformedURLException
@@ -12,7 +13,8 @@ enum class DownloadStatus {
 
 class GetRawData(private val listener: OnDownloadComplete) : AsyncTask<String, Void, String>() {
 
-    private var downloadStatus = DownloadStatus.IDLE
+    private var downloadStatus =
+        DownloadStatus.IDLE
 
     override fun onPostExecute(result: String) {
         super.onPostExecute(result)
@@ -23,31 +25,37 @@ class GetRawData(private val listener: OnDownloadComplete) : AsyncTask<String, V
 
     override fun doInBackground(vararg params: String?): String {
         if (params[0] == null) {
-            downloadStatus = DownloadStatus.NOT_INITIALIZED
+            downloadStatus =
+                DownloadStatus.NOT_INITIALIZED
             Timber.e("GetRawData.doInBackground NOT_INITIALIZED")
             return "No URL specified"
         }
 
         try {
-            downloadStatus = DownloadStatus.OK
+            downloadStatus =
+                DownloadStatus.OK
             Timber.d("GetRawData.doInBackground STATUS OK")
             return URL(params[0]).readText()
         } catch (e: Exception) {
             val errorMessage = when(e) {
                 is MalformedURLException -> {
-                    downloadStatus = DownloadStatus.NOT_INITIALIZED
+                    downloadStatus =
+                        DownloadStatus.NOT_INITIALIZED
                     "doInBackground: Invalid URL ${e.message}"
                 }
                 is IOException -> {
-                    downloadStatus = DownloadStatus.FAILED_OR_EMPTY
+                    downloadStatus =
+                        DownloadStatus.FAILED_OR_EMPTY
                     "doInBackground: IOException Reading data ${e.message}"
                 }
                 is SecurityException -> {
-                    downloadStatus = DownloadStatus.PERMISSIONS_ERROR
+                    downloadStatus =
+                        DownloadStatus.PERMISSIONS_ERROR
                     "doInBackground: Security Exception: Needs permission? ${e.message}"
                 }
                 else -> {
-                    downloadStatus = DownloadStatus.ERROR
+                    downloadStatus =
+                        DownloadStatus.ERROR
                     "Unknown error: ${e.message}"
                 }
             }

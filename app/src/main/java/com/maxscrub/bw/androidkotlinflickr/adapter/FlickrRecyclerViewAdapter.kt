@@ -1,4 +1,4 @@
-package com.maxscrub.bw.androidkotlinflickr
+package com.maxscrub.bw.androidkotlinflickr.adapter
 
 import android.view.LayoutInflater
 import android.view.View
@@ -6,6 +6,8 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.maxscrub.bw.androidkotlinflickr.R
+import com.maxscrub.bw.androidkotlinflickr.model.Photo
 import timber.log.Timber
 
 
@@ -36,7 +38,7 @@ class FlickrRecyclerViewAdapter(private var photoList: List<Photo>) :
         notifyDataSetChanged()
     }
 
-    fun getPhoto(position: Int) : Photo? {
+    fun getPhoto(position: Int): Photo? {
         Timber.d("%s.getPhoto", TAG)
         return if (photoList.isNotEmpty()) photoList[position] else null
     }

@@ -1,6 +1,7 @@
-package com.maxscrub.bw.androidkotlinflickr
+package com.maxscrub.bw.androidkotlinflickr.model
 
 import android.os.AsyncTask
+import com.maxscrub.bw.androidkotlinflickr.interfaces.OnDataAvailable
 import org.json.JSONException
 import org.json.JSONObject
 import timber.log.Timber
@@ -31,7 +32,15 @@ class GetFlickrJsonData(private val listener: OnDataAvailable): AsyncTask<String
                 // get bigger image
                 val link = photoUrl.replaceFirst("_m.jpg", "_b.jpg")
 
-                val photoObject = Photo(title, author, authorID, link, tags, photoUrl)
+                val photoObject =
+                    Photo(
+                        title,
+                        author,
+                        authorID,
+                        link,
+                        tags,
+                        photoUrl
+                    )
                 photoList.add(photoObject)
 
                 Timber.d("GetFlickrJsonData.doInBackground $photoObject")

@@ -1,4 +1,4 @@
-package com.maxscrub.bw.androidkotlinflickr
+package com.maxscrub.bw.androidkotlinflickr.model
 
 
 class Photo(val title: String,
