@@ -4,14 +4,18 @@ import android.net.Uri
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.maxscrub.bw.androidkotlinflickr.*
 import com.maxscrub.bw.androidkotlinflickr.adapter.FlickrRecyclerViewAdapter
 import com.maxscrub.bw.androidkotlinflickr.interfaces.OnDataAvailable
 import com.maxscrub.bw.androidkotlinflickr.interfaces.OnDownloadComplete
+import com.maxscrub.bw.androidkotlinflickr.interfaces.OnRecyclerClickListener
 import com.maxscrub.bw.androidkotlinflickr.model.GetFlickrJsonData
 import com.maxscrub.bw.androidkotlinflickr.model.Photo
+import com.maxscrub.bw.androidkotlinflickr.model.RecyclerItemClickListener
 import com.maxscrub.bw.androidkotlinflickr.task.DownloadStatus
 import com.maxscrub.bw.androidkotlinflickr.task.GetRawData
 
@@ -22,7 +26,8 @@ import java.lang.Exception
 
 class MainActivity : AppCompatActivity(),
     OnDownloadComplete,
-    OnDataAvailable {
+    OnDataAvailable,
+    OnRecyclerClickListener{
 
     private val flickrRecyclerViewAdapter = FlickrRecyclerViewAdapter(ArrayList())
 
@@ -35,6 +40,7 @@ class MainActivity : AppCompatActivity(),
         Timber.d("MainActivity.onCreate")
 
         recycler_view.layoutManager = LinearLayoutManager(this)
+        recycler_view.addOnItemTouchListener(RecyclerItemClickListener(this, recycler_view, this))
         recycler_view.adapter = flickrRecyclerViewAdapter
 
         val url = createUri("https://api.flickr.com/services/feeds/photos_public.gne", "android,oreo", "en-us", true)
@@ -90,5 +96,15 @@ class MainActivity : AppCompatActivity(),
 
     override fun onError(exception: Exception) {
         Timber.e("MainActivity.onError: Exception - $exception")
+    }
+
+    override fun onItemClick(view: View, position: Int) {
+        Timber.d("Main.onItemClick")
+        Toast.makeText(this, "Normal tap @ $position", Toast.LENGTH_SHORT).show()
+    }
+
+    override fun onItemLongClick(view: View, position: Int) {
+        Timber.d("Main.onItemLongClick")
+        Toast.makeText(this, "Long tap @ $position", Toast.LENGTH_SHORT).show()
     }
 }
