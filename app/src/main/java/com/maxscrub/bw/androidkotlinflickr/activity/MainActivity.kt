@@ -1,5 +1,6 @@
 package com.maxscrub.bw.androidkotlinflickr.activity
 
+import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.view.Menu
@@ -24,7 +25,7 @@ import kotlinx.android.synthetic.main.content_main.*
 import timber.log.Timber
 import java.lang.Exception
 
-class MainActivity : AppCompatActivity(),
+class MainActivity : BaseActivity(),
     OnDownloadComplete,
     OnDataAvailable,
     OnRecyclerClickListener{
@@ -35,9 +36,9 @@ class MainActivity : AppCompatActivity(),
         Timber.plant(Timber.DebugTree())
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        setSupportActionBar(toolbar)
-
         Timber.d("MainActivity.onCreate")
+
+        activateToolbar(false)
 
         recycler_view.layoutManager = LinearLayoutManager(this)
         recycler_view.addOnItemTouchListener(RecyclerItemClickListener(this, recycler_view, this))
@@ -105,6 +106,11 @@ class MainActivity : AppCompatActivity(),
 
     override fun onItemLongClick(view: View, position: Int) {
         Timber.d("Main.onItemLongClick")
-        Toast.makeText(this, "Long tap @ $position", Toast.LENGTH_SHORT).show()
+        val photo = flickrRecyclerViewAdapter.getPhoto(position)
+        if (photo != null) {
+            val intent = Intent(this, PhotoDetailsActivity::class.java)
+            intent.putExtra(PHOTO_TRANSFER, photo)
+            startActivity(intent)
+        }
     }
 }
