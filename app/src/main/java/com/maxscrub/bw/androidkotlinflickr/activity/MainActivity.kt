@@ -7,9 +7,8 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.maxscrub.bw.androidkotlinflickr.*
+import com.maxscrub.bw.androidkotlinflickr.R
 import com.maxscrub.bw.androidkotlinflickr.adapter.FlickrRecyclerViewAdapter
 import com.maxscrub.bw.androidkotlinflickr.interfaces.OnDataAvailable
 import com.maxscrub.bw.androidkotlinflickr.interfaces.OnDownloadComplete
@@ -19,11 +18,8 @@ import com.maxscrub.bw.androidkotlinflickr.model.Photo
 import com.maxscrub.bw.androidkotlinflickr.model.RecyclerItemClickListener
 import com.maxscrub.bw.androidkotlinflickr.task.DownloadStatus
 import com.maxscrub.bw.androidkotlinflickr.task.GetRawData
-
-import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.content_main.*
 import timber.log.Timber
-import java.lang.Exception
 
 class MainActivity : BaseActivity(),
     OnDownloadComplete,
