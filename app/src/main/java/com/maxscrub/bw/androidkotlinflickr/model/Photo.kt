@@ -1,11 +1,13 @@
 package com.maxscrub.bw.androidkotlinflickr.model
 
+import android.os.Parcelable
+import kotlinx.android.parcel.Parcelize
 import timber.log.Timber
 import java.io.IOException
 import java.io.ObjectStreamException
 import java.io.Serializable
 
-
+@Parcelize
 class Photo(
     var title: String,
     var author: String,
@@ -13,7 +15,7 @@ class Photo(
     var link: String,
     var tags: String,
     var image: String
-) : Serializable {
+) : Parcelable {
 
     companion object {
         private const val serialVersionUID = 1L
