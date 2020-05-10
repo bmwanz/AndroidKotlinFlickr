@@ -69,9 +69,15 @@ class MainActivity : BaseActivity(),
         return super.onCreateOptionsMenu(menu)
     }
 
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
         Timber.d("MainActivity.onOptionItemSelected")
-        return super.onOptionsItemSelected(item)
+        return when (item.itemId) {
+            R.id.action_search -> {
+                startActivity(Intent(this, SearchActivity::class.java))
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
     }
 
     override fun onDownloadComplete(data: String, status: DownloadStatus) {
