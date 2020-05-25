@@ -8,6 +8,7 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.preference.PreferenceManager
 import com.maxscrub.bw.androidkotlinflickr.R
 import com.maxscrub.bw.androidkotlinflickr.adapter.FlickrRecyclerViewAdapter
 import com.maxscrub.bw.androidkotlinflickr.interfaces.OnDataAvailable
@@ -40,10 +41,34 @@ class MainActivity : BaseActivity(),
         recycler_view.addOnItemTouchListener(RecyclerItemClickListener(this, recycler_view, this))
         recycler_view.adapter = flickrRecyclerViewAdapter
 
-        val url = createUri("https://api.flickr.com/services/feeds/photos_public.gne", "android,oreo", "en-us", true)
-        val getRawData = GetRawData(this)
-        getRawData.execute(url)
+//        val url = createUri(
+//            "https://api.flickr.com/services/feeds/photos_public.gne",
+//            "android,oreo",
+//            "en-us",
+//            true
+//        )
+//        val getRawData = GetRawData(this)
+//        getRawData.execute(url)
 
+    }
+
+    override fun onResume() {
+        Timber.d("MainActivity.onResume")
+        super.onResume()
+
+        val sharedPref = PreferenceManager.getDefaultSharedPreferences(applicationContext)
+        val queryResult = sharedPref.getString(FLICKR_QUERY, "")
+
+        if (queryResult != null && queryResult.isNotEmpty()) {
+            val url = createUri(
+                "https://api.flickr.com/services/feeds/photos_public.gne",
+                queryResult,
+                "en-us",
+                true
+            )
+            val getRawData = GetRawData(this)
+            getRawData.execute(url)
+        }
     }
 
     private fun createUri(baseUrl: String, searchCriteria: String, language: String, matchAll: Boolean) : String {
