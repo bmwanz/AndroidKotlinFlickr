@@ -7,9 +7,9 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.maxscrub.bw.androidkotlinflickr.*
+import androidx.preference.PreferenceManager
+import com.maxscrub.bw.androidkotlinflickr.R
 import com.maxscrub.bw.androidkotlinflickr.adapter.FlickrRecyclerViewAdapter
 import com.maxscrub.bw.androidkotlinflickr.interfaces.OnDataAvailable
 import com.maxscrub.bw.androidkotlinflickr.interfaces.OnDownloadComplete
@@ -19,11 +19,8 @@ import com.maxscrub.bw.androidkotlinflickr.model.Photo
 import com.maxscrub.bw.androidkotlinflickr.model.RecyclerItemClickListener
 import com.maxscrub.bw.androidkotlinflickr.task.DownloadStatus
 import com.maxscrub.bw.androidkotlinflickr.task.GetRawData
-
-import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.content_main.*
 import timber.log.Timber
-import java.lang.Exception
 
 class MainActivity : BaseActivity(),
     OnDownloadComplete,
@@ -44,10 +41,34 @@ class MainActivity : BaseActivity(),
         recycler_view.addOnItemTouchListener(RecyclerItemClickListener(this, recycler_view, this))
         recycler_view.adapter = flickrRecyclerViewAdapter
 
-        val url = createUri("https://api.flickr.com/services/feeds/photos_public.gne", "android,oreo", "en-us", true)
-        val getRawData = GetRawData(this)
-        getRawData.execute(url)
+//        val url = createUri(
+//            "https://api.flickr.com/services/feeds/photos_public.gne",
+//            "android,oreo",
+//            "en-us",
+//            true
+//        )
+//        val getRawData = GetRawData(this)
+//        getRawData.execute(url)
 
+    }
+
+    override fun onResume() {
+        Timber.d("MainActivity.onResume")
+        super.onResume()
+
+        val sharedPref = PreferenceManager.getDefaultSharedPreferences(applicationContext)
+        val queryResult = sharedPref.getString(FLICKR_QUERY, "")
+
+        if (queryResult != null && queryResult.isNotEmpty()) {
+            val url = createUri(
+                "https://api.flickr.com/services/feeds/photos_public.gne",
+                queryResult,
+                "en-us",
+                true
+            )
+            val getRawData = GetRawData(this)
+            getRawData.execute(url)
+        }
     }
 
     private fun createUri(baseUrl: String, searchCriteria: String, language: String, matchAll: Boolean) : String {
@@ -73,9 +94,15 @@ class MainActivity : BaseActivity(),
         return super.onCreateOptionsMenu(menu)
     }
 
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
         Timber.d("MainActivity.onOptionItemSelected")
-        return super.onOptionsItemSelected(item)
+        return when (item.itemId) {
+            R.id.action_search -> {
+                startActivity(Intent(this, SearchActivity::class.java))
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
     }
 
     override fun onDownloadComplete(data: String, status: DownloadStatus) {
