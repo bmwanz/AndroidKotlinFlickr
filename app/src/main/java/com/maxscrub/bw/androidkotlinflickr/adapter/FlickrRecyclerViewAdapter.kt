@@ -26,13 +26,15 @@ class FlickrRecyclerViewAdapter(private var photoList: List<Photo>) :
 
     override fun getItemCount(): Int {
 //        Timber.d("%s.getItemCount", TAG)
-        return if (photoList.isNotEmpty()) photoList.size else 0
+        return if (photoList.isNotEmpty()) photoList.size else 1
+        // 1 for the placeholder/error
     }
 
     override fun onBindViewHolder(holder: FlickrImageViewHolder, position: Int) {
         // called by layout manager when need new data in existing view
 
         if (photoList.isEmpty()) {
+            // placeholder for error
             holder.thumbnail.setImageResource(R.drawable.placeholder)
             holder.title.setText(R.string.empty_photo)
         } else {
